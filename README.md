@@ -32,13 +32,19 @@ data "terraform_remote_state" "pet" {
   }
 }
 
-output  "value"{
-  value = data.terraform_remote_state.pet
+
+resource "null_resource" "pet" {
+ provisioner "local-exec" {
+    command = "echo ${data.terraform_remote_state.pet.outputs.pet_name}"
+  }
 }
 ```
 
 The data module here is using the remote state data source to get the output information form the ```tfc_random_pet_remote_state_data_source``` backend is remote as we are using TFC, the organization name must be the name of your organization and the workspace the name of the workspace thet your destination code is located.
 
 The output just prints the name of the pet resource from the source workspace 
+the command ```command = "echo ${data.terraform_remote_state.pet.outputs.pet_name}"``` works as follows:
+```data.terraform_remote_state.pet``` is the data thet is gathered from the soure workspace 
+```outputs.pet_name``` is the string that is outputed at the pet_name resource, if oyu don't add this you will get JSON output of all data 
 
 
