@@ -1,3 +1,15 @@
+terraform {
+  required_providers {
+    null = {
+      source  = "hashicorp/null"
+      version = "3.1.1"
+    }
+  }
+}
+
+provider "null" {}
+
+
 data "terraform_remote_state" "pet" {
   backend = "remote"
 
@@ -9,6 +21,9 @@ data "terraform_remote_state" "pet" {
   }
 }
 
-output  "value"{
-  value = data.terraform_remote_state.pet
+
+resource "null_resource" "pet" {
+ provisioner "local-exec" {
+    command = "echo ${data.terraform_remote_state.pet.outputs.pet_name}"
+  }
 }
